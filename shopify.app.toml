@@ -1,0 +1,36 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "b74b66d9bed456547af374c0563d5989"
+name = "discount-announcement"
+handle = "discount-announcement"
+application_url = "https://proposal-why-produce-kazakhstan.trycloudflare.com"
+embedded = true
+
+[build]
+automatically_update_urls_on_dev = true
+dev_store_url = "gen-test-store-individual.myshopify.com"
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "write_products"
+
+[auth]
+redirect_urls = [
+  "https://example.com/api/auth",
+  "https://media-athletic-threaded-interventions.trycloudflare.com/auth/callback",
+  "https://media-athletic-threaded-interventions.trycloudflare.com/auth/shopify/callback",
+  "https://media-athletic-threaded-interventions.trycloudflare.com/api/auth/callback",
+  "https://proposal-why-produce-kazakhstan.trycloudflare.com/auth/callback",
+  "https://proposal-why-produce-kazakhstan.trycloudflare.com/auth/shopify/callback",
+  "https://proposal-why-produce-kazakhstan.trycloudflare.com/api/auth/callback"
+]
+
+[webhooks]
+api_version = "2024-10"
+
+  [[webhooks.subscriptions]]
+  topics = [ "app/uninstalled" ]
+  uri = "/webhooks/app/uninstalled"
+
+[pos]
+embedded = false
