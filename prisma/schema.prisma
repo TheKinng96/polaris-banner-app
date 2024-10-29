@@ -42,3 +42,22 @@ model QRCode {
   scans            Int      @default(0)
   createdAt        DateTime @default(now())
 }
+
+// 
+model Banner {
+  id  Int @id @default(autoincrement())
+  source String 
+  text String
+  theme String
+  customThemeId Int?     @unique
+  customTheme Theme? @relation(fields: [customThemeId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Theme {
+  id  Int @id @default(autoincrement())
+  banner Banner?
+  text String
+  background String
+}
