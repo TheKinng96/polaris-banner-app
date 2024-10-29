@@ -3,7 +3,7 @@
 client_id = "b74b66d9bed456547af374c0563d5989"
 name = "discount-announcement"
 handle = "discount-announcement"
-application_url = "https://proposal-why-produce-kazakhstan.trycloudflare.com"
+application_url = "https://finish-examined-destination-teddy.trycloudflare.com"
 embedded = true
 
 [build]
@@ -22,7 +22,13 @@ redirect_urls = [
   "https://media-athletic-threaded-interventions.trycloudflare.com/api/auth/callback",
   "https://proposal-why-produce-kazakhstan.trycloudflare.com/auth/callback",
   "https://proposal-why-produce-kazakhstan.trycloudflare.com/auth/shopify/callback",
-  "https://proposal-why-produce-kazakhstan.trycloudflare.com/api/auth/callback"
+  "https://proposal-why-produce-kazakhstan.trycloudflare.com/api/auth/callback",
+  "https://cambridge-league-folding-tennessee.trycloudflare.com/auth/callback",
+  "https://cambridge-league-folding-tennessee.trycloudflare.com/auth/shopify/callback",
+  "https://cambridge-league-folding-tennessee.trycloudflare.com/api/auth/callback",
+  "https://finish-examined-destination-teddy.trycloudflare.com/auth/callback",
+  "https://finish-examined-destination-teddy.trycloudflare.com/auth/shopify/callback",
+  "https://finish-examined-destination-teddy.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
