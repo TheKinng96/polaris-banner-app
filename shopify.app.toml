@@ -3,7 +3,7 @@
 client_id = "b74b66d9bed456547af374c0563d5989"
 name = "discount-announcement"
 handle = "discount-announcement"
-application_url = "https://random-compile-runtime-carl.trycloudflare.com"
+application_url = "https://heating-generate-andrews-realize.trycloudflare.com"
 embedded = true
 
 [build]
@@ -38,7 +38,16 @@ redirect_urls = [
   "https://trusted-bite-bosnia-claims.trycloudflare.com/api/auth/callback",
   "https://random-compile-runtime-carl.trycloudflare.com/auth/callback",
   "https://random-compile-runtime-carl.trycloudflare.com/auth/shopify/callback",
-  "https://random-compile-runtime-carl.trycloudflare.com/api/auth/callback"
+  "https://random-compile-runtime-carl.trycloudflare.com/api/auth/callback",
+  "https://hansen-duke-chambers-hands.trycloudflare.com/auth/callback",
+  "https://hansen-duke-chambers-hands.trycloudflare.com/auth/shopify/callback",
+  "https://hansen-duke-chambers-hands.trycloudflare.com/api/auth/callback",
+  "https://clients-fe-prototype-ipaq.trycloudflare.com/auth/callback",
+  "https://clients-fe-prototype-ipaq.trycloudflare.com/auth/shopify/callback",
+  "https://clients-fe-prototype-ipaq.trycloudflare.com/api/auth/callback",
+  "https://heating-generate-andrews-realize.trycloudflare.com/auth/callback",
+  "https://heating-generate-andrews-realize.trycloudflare.com/auth/shopify/callback",
+  "https://heating-generate-andrews-realize.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

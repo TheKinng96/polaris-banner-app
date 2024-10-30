@@ -60,7 +60,7 @@ const DiscountTableRow = ({
   discount: Discount;
   index: number;
 }) => (
-  <IndexTable.Row id={discount.id} position={index}>
+  <IndexTable.Row id={discount.id + ""} position={index}>
     <IndexTable.Cell>
       <Text as="p">{discount.title}</Text>
     </IndexTable.Cell>
@@ -79,7 +79,7 @@ export default function DiscountsList() {
   return (
     <Page>
       <ui-title-bar title="Banners">
-        <button variant="primary" onClick={() => navigate("/app/banners/new")}>
+        <button variant="primary" onClick={() => navigate("new")}>
           Add new banner
         </button>
       </ui-title-bar>
