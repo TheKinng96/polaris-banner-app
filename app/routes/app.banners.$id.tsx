@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
@@ -25,10 +25,16 @@ import {
   SkeletonBodyText,
   SkeletonDisplayText,
   ChoiceList,
+  RadioButton,
 } from "@shopify/polaris";
 
 import { getDiscounts, getBanner } from "../models/Discounts.server";
-import type { CustomTheme, Banner, ThemeColor } from "app/types/banners.types";
+import type {
+  CustomTheme,
+  Banner,
+  ThemeColor,
+  BannerStatus,
+} from "app/types/banners.types";
 import { defaultColors } from "app/types/banners.types";
 import type { Discount } from "app/types/discounts.types";
 
@@ -36,11 +42,12 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const { admin } = await authenticate.admin(request);
 
   if (params.id === "new") {
+    const discounts = await getDiscounts(admin.graphql);
     const data = {
-      discounts: await getDiscounts(admin.graphql),
+      discounts,
       banner: {
-        id: 0,
-        discountId: 0,
+        id: 9999,
+        discountId: discounts.availableDiscounts[0].id,
         title: "",
         source: "",
         text: "",
@@ -48,7 +55,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
         customThemeId: undefined,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        status: "ACTIVE",
+        status: "PAUSED",
         asyncUsageCount: 0,
         discountStatus: "ACTIVE",
       },
@@ -100,6 +107,14 @@ export default function BannerForm() {
     },
   );
 
+  const selectedDiscount = useMemo(
+    () =>
+      discounts.availableDiscounts.find(
+        (discount) => discount.id === formState.discountId,
+      ) as Discount,
+    [discounts.availableDiscounts, formState.discountId],
+  );
+
   const nav = useNavigation();
 
   const isSaving =
@@ -133,9 +148,11 @@ export default function BannerForm() {
                 (discount) => discount.id === value,
               )?.summary || ""
             : formState.text,
+        status:
+          selectedDiscount?.status !== "ACTIVE" ? "PAUSED" : formState.status,
       });
     },
-    [discounts.availableDiscounts, formState],
+    [discounts.availableDiscounts, formState, selectedDiscount],
   );
 
   const handleCustomThemeTextChange = useCallback(
@@ -159,6 +176,12 @@ export default function BannerForm() {
   const handleChoiceListChange = useCallback(
     (value: string[]) =>
       setFormState({ ...formState, theme: value as ThemeColor[] }),
+    [formState],
+  );
+
+  const handleStatusChanged = useCallback(
+    (_: boolean, newValue: string) =>
+      setFormState({ ...formState, status: newValue as BannerStatus }),
     [formState],
   );
 
@@ -259,9 +282,7 @@ export default function BannerForm() {
                         onChange={handleSelectChange}
                         value={formState.discountId}
                       />
-                      {discounts.availableDiscounts.find(
-                        (discount) => discount.id === formState.discountId,
-                      )?.status !== "ACTIVE" ? (
+                      {selectedDiscount?.status !== "ACTIVE" ? (
                         <Text as="span" tone="critical">
                           Discount is expired or not active
                         </Text>
@@ -269,6 +290,59 @@ export default function BannerForm() {
                     </BlockStack>
                   </div>
                 </InlineStack>
+
+                <BlockStack gap="100">
+                  <InlineStack
+                    align="space-between"
+                    gap="500"
+                    blockAlign="start"
+                  >
+                    <Text as={"h2"} variant="headingLg">
+                      {banner.id === 9999 ? "Initial" : null}
+                      Status
+                    </Text>
+
+                    <div style={{ flex: 1, maxWidth }}>
+                      <BlockStack gap="100">
+                        <InlineStack align="start" gap="500">
+                          <RadioButton
+                            label="ACTIVE"
+                            id="ACTIVE"
+                            name="status"
+                            disabled={selectedDiscount?.status !== "ACTIVE"}
+                            checked={formState.status === "ACTIVE"}
+                            onChange={handleStatusChanged}
+                          />
+
+                          {selectedDiscount?.status !== "ACTIVE" ? (
+                            <Text as="span" tone="critical">
+                              The selected discount is not active
+                            </Text>
+                          ) : null}
+                        </InlineStack>
+
+                        <RadioButton
+                          label="PAUSED"
+                          id="PAUSED"
+                          name="status"
+                          checked={formState.status === "PAUSED"}
+                          onChange={handleStatusChanged}
+                        />
+                      </BlockStack>
+                    </div>
+                  </InlineStack>
+
+                  <div
+                    style={{
+                      backgroundColor: "var(--p-color-bg-surface-warning)",
+                      padding: "var(--p-space-200) var(--p-space-400)",
+                    }}
+                  >
+                    <Text tone="subdued" as="p">
+                      Only a banner can be active at a time.
+                    </Text>
+                  </div>
+                </BlockStack>
 
                 <InlineStack
                   align="space-between"

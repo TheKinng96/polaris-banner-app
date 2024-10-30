@@ -8,7 +8,7 @@ export interface Banner {
   customThemeId?: string;
   createdAt: string;
   updatedAt: string;
-  status: "ACTIVE" | "PAUSED";
+  status: BannerStatus;
 
   // From discount
   asyncUsageCount: number;
@@ -16,6 +16,8 @@ export interface Banner {
 }
 
 export type ThemeColor = "info" | "success" | "warn" | "danger" | "custom";
+
+export type BannerStatus = "ACTIVE" | "PAUSED";
 
 export interface CustomTheme {
   id: number;
