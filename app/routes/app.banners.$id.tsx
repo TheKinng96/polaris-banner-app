@@ -24,11 +24,12 @@ import {
   SkeletonPage,
   SkeletonBodyText,
   SkeletonDisplayText,
+  ChoiceList,
 } from "@shopify/polaris";
 
-import db from "../db.server";
 import { getDiscounts, getBanner } from "../models/Discounts.server";
-import type { CustomTheme, type Banner } from "app/types/banners.types";
+import type { CustomTheme, Banner, ThemeColor } from "app/types/banners.types";
+import { defaultColors } from "app/types/banners.types";
 import type { Discount } from "app/types/discounts.types";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -43,7 +44,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
         title: "",
         source: "",
         text: "",
-        theme: "",
+        theme: "info",
         customThemeId: undefined,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
@@ -52,6 +53,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
         discountStatus: "ACTIVE",
       },
     };
+
+    console.log(data.discounts.availableDiscounts[0]);
     return json(data);
   }
 
@@ -153,6 +156,12 @@ export default function BannerForm() {
     [customThemeFormState],
   );
 
+  const handleChoiceListChange = useCallback(
+    (value: string[]) =>
+      setFormState({ ...formState, theme: value as ThemeColor[] }),
+    [formState],
+  );
+
   const renderChildren = useCallback(
     (isSelected: boolean) =>
       isSelected && (
@@ -237,22 +246,27 @@ export default function BannerForm() {
                   <Divider />
                 </Bleed>
 
-                <InlineStack
-                  align="space-between"
-                  gap="500"
-                  blockAlign="center"
-                >
+                <InlineStack align="space-between" gap="500" blockAlign="start">
                   <Text as={"h2"} variant="headingLg">
                     Discount
                   </Text>
 
                   <div style={{ flex: 1, maxWidth }}>
-                    <Select
-                      label=""
-                      options={options}
-                      onChange={handleSelectChange}
-                      value={formState.discountId}
-                    />
+                    <BlockStack gap="100">
+                      <Select
+                        label=""
+                        options={options}
+                        onChange={handleSelectChange}
+                        value={formState.discountId}
+                      />
+                      {discounts.availableDiscounts.find(
+                        (discount) => discount.id === formState.discountId,
+                      )?.status !== "ACTIVE" ? (
+                        <Text as="span" tone="critical">
+                          Discount is expired or not active
+                        </Text>
+                      ) : null}
+                    </BlockStack>
                   </div>
                 </InlineStack>
 
@@ -278,6 +292,30 @@ export default function BannerForm() {
                     />
                   </div>
                 </InlineStack>
+
+                <InlineStack align="space-between" gap="500" blockAlign="start">
+                  <Text as={"h2"} variant="headingLg">
+                    Theme
+                  </Text>
+
+                  <div style={{ flex: 1, maxWidth }}>
+                    <ChoiceList
+                      title=""
+                      choices={[
+                        { label: "Info", value: "info" },
+                        { label: "Danger", value: "danger" },
+                        { label: "Warn", value: "warn" },
+                        {
+                          label: "Custom Theme",
+                          value: "custom",
+                          renderChildren,
+                        },
+                      ]}
+                      selected={formState.theme}
+                      onChange={handleChoiceListChange}
+                    />
+                  </div>
+                </InlineStack>
               </BlockStack>
             </Card>
           </BlockStack>
@@ -285,55 +323,63 @@ export default function BannerForm() {
 
         <Layout.Section>
           <Card>
-            <Text as={"h2"} variant="headingLg">
-              Preview
-            </Text>
+            <BlockStack gap="200">
+              <Text as={"h2"} variant="headingLg">
+                Preview
+              </Text>
 
-            <div
-              style={{
-                borderStyle: "solid",
-                borderWidth: "var(--p-border-width-050)",
-                borderColor: "var(--p-color-border-secondary)",
-                borderRadius: "var(--p-border-radius-400)",
-              }}
-            >
               <div
                 style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  padding: "1rem 0.5rem",
+                  overflow: "hidden",
+                  borderStyle: "solid",
+                  borderWidth: "var(--p-border-width-050)",
+                  borderColor: "var(--p-color-border-secondary)",
+                  borderRadius: "var(--p-border-radius-400)",
                 }}
               >
-                {formState.text}
-              </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    padding: "1rem 0.5rem",
+                    color:
+                      defaultColors[formState.theme[0]]?.text ||
+                      "rgba(48, 48, 48, 1)",
+                    backgroundColor:
+                      defaultColors[formState.theme[0]]?.background || "white",
+                  }}
+                >
+                  {formState.text}
+                </div>
 
-              <SkeletonPage primaryAction>
-                <Layout>
-                  <Layout.Section>
-                    <Card>
-                      <BlockStack gap="200">
-                        <SkeletonDisplayText size="small" />
-                        <SkeletonBodyText />
-                      </BlockStack>
-                    </Card>
-                  </Layout.Section>
-                  <Layout.Section variant="oneThird">
-                    <BlockStack gap="300">
+                <SkeletonPage primaryAction>
+                  <Layout>
+                    <Layout.Section>
                       <Card>
                         <BlockStack gap="200">
                           <SkeletonDisplayText size="small" />
-                          <SkeletonBodyText lines={2} />
+                          <SkeletonBodyText />
                         </BlockStack>
                       </Card>
+                    </Layout.Section>
+                    <Layout.Section variant="oneThird">
+                      <BlockStack gap="300">
+                        <Card>
+                          <BlockStack gap="200">
+                            <SkeletonDisplayText size="small" />
+                            <SkeletonBodyText lines={2} />
+                          </BlockStack>
+                        </Card>
 
-                      <Card>
-                        <SkeletonBodyText lines={1} />
-                      </Card>
-                    </BlockStack>
-                  </Layout.Section>
-                </Layout>
-              </SkeletonPage>
-            </div>
+                        <Card>
+                          <SkeletonBodyText lines={1} />
+                        </Card>
+                      </BlockStack>
+                    </Layout.Section>
+                  </Layout>
+                </SkeletonPage>
+              </div>
+            </BlockStack>
           </Card>
         </Layout.Section>
         <Layout.Section>
