@@ -5,6 +5,8 @@ import type {
   ThemeColor,
   BannerStatus,
 } from "../types/banners.types";
+import pkg from "lodash";
+const { isEqual } = pkg;
 
 type StateType = {
   formState: Banner;
@@ -98,8 +100,11 @@ export function useBannerForm(initialBanner?: Banner) {
     dispatch({ type: "SET_CLEAN_FORM_STATE" });
   }, [dispatch]);
 
+  const isDirty = !isEqual(state.formState, state.cleanFormState);
+
   return {
     state,
+    isDirty,
     updateFormState,
     updateCustomTheme,
     resetForm,
