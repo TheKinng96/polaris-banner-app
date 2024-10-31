@@ -46,7 +46,7 @@ model QRCode {
 // 
 model Banner {
   id  Int @id @default(autoincrement())
-  discountId String
+  discountId String @unique
   title String
   status String
   source String 

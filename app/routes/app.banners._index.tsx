@@ -56,14 +56,14 @@ export default function DiscountsList() {
 
   const EmptyQRCodeState = ({ onAction }: { onAction: () => void }) => (
     <EmptyState
-      heading="Create unique QR codes for your product"
+      heading="Create discount banner for your store to increase the conversion!"
       action={{
-        content: "Create QR code",
+        content: "Create Banner",
         onAction,
       }}
       image="https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png"
     >
-      <p>Allow customers to scan codes and buy products using their phones.</p>
+      <p>Promote your store by creating discount banner.</p>
     </EmptyState>
   );
 

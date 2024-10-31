@@ -46,12 +46,22 @@ export function BannerDetails({
     const selectedDiscount = availableDiscountList.find(
       (discount) => discount.id === value,
     );
+
+    const previousDiscount = availableDiscountList.find(
+      (discount) => discount.id === formState.discountId,
+    );
+    // if the existing text is exactly the same with the summary of the previous discount
+    // we update the text to the summary of the next selected discount
+    // else we wont update the text
+    const text =
+      formState.text.length === 0 ||
+      previousDiscount?.summary === formState.text
+        ? selectedDiscount?.summary || ""
+        : formState.text;
+
     updateFormState({
       discountId: value,
-      text:
-        formState.text.length === 0
-          ? selectedDiscount?.summary || ""
-          : formState.text,
+      text,
       status:
         selectedDiscount?.status !== "ACTIVE" ? "PAUSED" : formState.status,
     });
