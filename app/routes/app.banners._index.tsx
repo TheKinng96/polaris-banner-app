@@ -16,7 +16,9 @@ import type { Discount } from "app/types/discounts.types";
 export async function loader({ request }: LoaderFunctionArgs) {
   const { admin } = await authenticate.admin(request);
 
-  return json(await getDiscounts(admin.graphql));
+  const data = await getDiscounts(admin.graphql);
+  console.log("banners index", data);
+  return json(data);
 }
 
 const EmptyQRCodeState = ({ onAction }: { onAction: () => void }) => (
@@ -70,9 +72,10 @@ const DiscountTableRow = ({
 );
 
 export default function DiscountsList() {
-  const { total, discounts } = useLoaderData<{
+  const { total, data: discounts } = useLoaderData<{
     total: number;
-    discounts: Discount[];
+    data: Discount[];
+    availableDiscounts: Discount[];
   }>();
   const navigate = useNavigate();
 

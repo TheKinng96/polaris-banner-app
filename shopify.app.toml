@@ -3,7 +3,7 @@
 client_id = "b74b66d9bed456547af374c0563d5989"
 name = "discount-announcement"
 handle = "discount-announcement"
-application_url = "https://heating-generate-andrews-realize.trycloudflare.com"
+application_url = "https://britain-government-shaped-column.trycloudflare.com"
 embedded = true
 
 [build]
@@ -47,7 +47,10 @@ redirect_urls = [
   "https://clients-fe-prototype-ipaq.trycloudflare.com/api/auth/callback",
   "https://heating-generate-andrews-realize.trycloudflare.com/auth/callback",
   "https://heating-generate-andrews-realize.trycloudflare.com/auth/shopify/callback",
-  "https://heating-generate-andrews-realize.trycloudflare.com/api/auth/callback"
+  "https://heating-generate-andrews-realize.trycloudflare.com/api/auth/callback",
+  "https://britain-government-shaped-column.trycloudflare.com/auth/callback",
+  "https://britain-government-shaped-column.trycloudflare.com/auth/shopify/callback",
+  "https://britain-government-shaped-column.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
