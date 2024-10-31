@@ -92,12 +92,24 @@ export async function getBanner(id, graphql) {
 
   if (!banner) return null;
 
-  const discount = await getDiscount(banner.id, graphql);
+  const discount = await getDiscount(banner.discountId, graphql);
+
+  let bannerTheme = null;
+  if (banner.customThemeId) {
+    bannerTheme = await db.theme.findFirst({
+      where: { id: banner.customThemeId },
+    });
+  }
 
   return {
-    ...banner,
-    asyncUsageCount: discount.asyncUsageCount,
-    discountStatus: discount.status,
+    banner: {
+      ...banner,
+      theme: JSON.parse(banner.theme),
+      asyncUsageCount: discount.asyncUsageCount,
+      discountStatus: discount.status,
+      themeDetails: bannerTheme,
+    },
+    discount,
   };
 }
 
@@ -157,14 +169,24 @@ async function getDiscount(id, graphql) {
         }
       }
     `,
-    { id },
+    {
+      variables: {
+        id,
+      },
+    },
   );
 
   const {
     data: { discountNode },
   } = await response.json();
 
-  return discountNode.discount;
+  return {
+    id: discountNode.id,
+    title: discountNode.discount.title,
+    status: discountNode.discount.status,
+    summary: discountNode.discount.summary,
+    asyncUsageCount: discountNode.discount.asyncUsageCount,
+  };
 }
 
 export async function getBanners(graphql) {

@@ -15,9 +15,9 @@ import db from "../db.server";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const { admin } = await authenticate.admin(request);
+  const availableDiscountList = await getAvailableDiscountList(admin.graphql);
 
   if (params.id === "new") {
-    const availableDiscountList = await getAvailableDiscountList(admin.graphql);
     const data = {
       availableDiscountList,
       banner: {
@@ -39,9 +39,14 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     return json(data);
   }
 
+  const { banner, discount } = (await getBanner(
+    Number(params.id),
+    admin.graphql,
+  )) as unknown as { banner: Banner; discount: Discount };
+
   return json({
-    availableDiscountList: [],
-    banner: await getBanner(Number(params.id), admin.graphql),
+    availableDiscountList: [discount, ...availableDiscountList],
+    banner,
   });
 }
 
