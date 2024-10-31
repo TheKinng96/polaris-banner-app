@@ -8,23 +8,53 @@ import {
   SkeletonBodyText,
 } from "@shopify/polaris";
 import { useBannerFormContext } from "../../contexts/BannerFormContext";
-import { defaultColors } from "../../types/banners.types";
+import type { CustomTheme, ThemeColor } from "../../types/banners.types";
+import { useMemo } from "react";
+
+const defaultColors = {
+  info: {
+    text: "rgba(48, 48, 48, 1)",
+    background: "rgba(81, 192, 255, 1)",
+  },
+  success: {
+    text: "rgba(48, 48, 48, 1)",
+    background: "rgba(4, 123, 93, 1)",
+  },
+  warn: {
+    text: "rgba(48, 48, 48, 1)",
+    background: "rgba(255, 184, 0, 1)",
+  },
+  danger: {
+    text: "rgba(48, 48, 48, 1)",
+    background: "rgba(255, 0, 0, 1)",
+  },
+} as Record<ThemeColor, Omit<CustomTheme, "id">>;
 
 export function BannerPreview() {
   const {
     state: { formState, customThemeFormState },
   } = useBannerFormContext();
 
-  let textColor = "rgba(48, 48, 48, 1)";
-  let backgroundColor = "white";
+  const theme = useMemo(() => {
+    let textColor = "rgba(48, 48, 48, 1)";
+    let backgroundColor = "white";
 
-  if (formState.theme.includes("custom")) {
-    textColor = customThemeFormState.text || textColor;
-    backgroundColor = customThemeFormState.background || backgroundColor;
-  } else {
-    const themeColor = formState.theme[0];
-    textColor = defaultColors[themeColor]?.text || textColor;
-    backgroundColor = defaultColors[themeColor]?.background || backgroundColor;
+    const themeColor = formState.theme[0] || ["info"];
+
+    if (themeColor === "custom" && formState.theme.includes("custom")) {
+      textColor = customThemeFormState.text || textColor;
+      backgroundColor = customThemeFormState.background || backgroundColor;
+    } else {
+      textColor = defaultColors[themeColor]?.text || textColor;
+      backgroundColor =
+        defaultColors[themeColor]?.background || backgroundColor;
+    }
+
+    return { textColor, backgroundColor };
+  }, [formState.theme, customThemeFormState]);
+
+  if (!formState.theme) {
+    return <div>Loading...</div>;
   }
 
   return (
@@ -48,11 +78,11 @@ export function BannerPreview() {
               display: "flex",
               justifyContent: "center",
               padding: "1rem 0.5rem",
-              color: textColor,
-              backgroundColor: backgroundColor,
+              color: theme.textColor,
+              backgroundColor: theme.backgroundColor,
             }}
           >
-            {formState.text}
+            {formState.text.length === 0 ? "Banner Text" : formState.text}
           </div>
 
           <SkeletonPage primaryAction>

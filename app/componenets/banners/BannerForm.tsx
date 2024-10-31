@@ -17,7 +17,7 @@ export default function BannerForm() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { state, isDirty, setCleanFormState, resetForm, discounts } =
     useBannerFormContext();
-  const { formState } = state;
+  const { formState, customThemeFormState } = state;
 
   const navigate = useNavigate();
   const submit = useSubmit();
@@ -38,10 +38,12 @@ export default function BannerForm() {
   };
 
   const handleSave = () => {
-    console.log("on save formState", formState);
     setCleanFormState();
-    const data = { ...formState };
-    submit(data, { method: "post" });
+
+    const formData = new FormData();
+    formData.append("banner", JSON.stringify(formState));
+    formData.append("theme", JSON.stringify(customThemeFormState));
+    submit(formData, { method: "post" });
   };
 
   const options = discounts.availableDiscounts.map((discount) => ({

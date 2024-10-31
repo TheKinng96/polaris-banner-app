@@ -17,7 +17,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const { admin } = await authenticate.admin(request);
 
   const data = await getDiscounts(admin.graphql);
-  console.log("banners index", data);
   return json(data);
 }
 

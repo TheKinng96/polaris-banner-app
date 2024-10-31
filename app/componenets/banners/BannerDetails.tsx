@@ -14,6 +14,7 @@ import {
 import type { ThemeColor, BannerStatus } from "../../types/banners.types";
 import { useBannerFormContext } from "../../contexts/BannerFormContext";
 import type { Discount } from "app/types/discounts.types";
+import ColourPickerWithHex from "./BannerThemeColorPicker";
 
 interface BannerDetailsProps {
   discounts: {
@@ -36,7 +37,7 @@ export function BannerDetails({
     updateCustomTheme,
   } = useBannerFormContext();
 
-  const maxWidth = "400px";
+  const maxWidth = "450px";
 
   const handleTitleChange = (title: string) => {
     updateFormState({ title });
@@ -76,20 +77,27 @@ export function BannerDetails({
   const renderChildren = () => {
     if (formState.theme.includes("custom")) {
       return (
-        <BlockStack gap="200">
-          <TextField
-            autoComplete="off"
-            label="Text Color"
-            value={customThemeFormState.text}
-            onChange={handleCustomThemeTextChange}
-          />
-          <TextField
-            autoComplete="off"
-            label="Background Color"
-            value={customThemeFormState.background}
-            onChange={handleCustomThemeBgChange}
-          />
-        </BlockStack>
+        <InlineStack gap="200">
+          <BlockStack gap="200">
+            <Text as="span" variant="headingMd">
+              Text Color
+            </Text>
+            <ColourPickerWithHex
+              hex={customThemeFormState.text}
+              setHex={handleCustomThemeTextChange}
+            />
+          </BlockStack>
+
+          <BlockStack gap="200">
+            <Text as="span" variant="headingMd">
+              Background Color
+            </Text>
+            <ColourPickerWithHex
+              hex={customThemeFormState.background}
+              setHex={handleCustomThemeBgChange}
+            />
+          </BlockStack>
+        </InlineStack>
       );
     }
     return null;
@@ -188,7 +196,7 @@ export function BannerDetails({
             <TextField
               autoComplete="off"
               id="text"
-              label="Message"
+              label=""
               value={formState.text}
               onChange={(text) => updateFormState({ text })}
             />
