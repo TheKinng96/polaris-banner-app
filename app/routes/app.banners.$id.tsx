@@ -60,6 +60,50 @@ export async function action({ request, params }: ActionFunctionArgs) {
   );
   const bannerData = JSON.parse(formData.get("banner") as string);
 
+  // EDIT
+  if (params.id !== "new") {
+    let customThemeId: number | null = bannerData.customThemeId;
+    if (bannerData.theme[0] === "custom" && customThemeData.text.length > 0) {
+      // If the theme is custom and we need to update
+      if (customThemeId) {
+        await db.theme.update({
+          where: {
+            id: customThemeId,
+          },
+          data: {
+            text: customThemeData.text,
+            background: customThemeData.background,
+          },
+        });
+      } else {
+        const newTheme = await db.theme.create({
+          data: {
+            text: customThemeData.text,
+            background: customThemeData.background,
+          },
+        });
+        customThemeId = newTheme.id;
+      }
+    }
+
+    await db.banner.update({
+      where: {
+        id: Number(params.id),
+      },
+      data: {
+        discountId: bannerData.discountId,
+        title: bannerData.title,
+        source: bannerData.source,
+        text: bannerData.text,
+        theme: JSON.stringify(bannerData.theme),
+        status: bannerData.status,
+        customThemeId,
+      },
+    });
+
+    return redirect("/app/banners");
+  }
+
   // Generate the tag and put in the store tag script
 
   let newTheme: CustomTheme | null = null;

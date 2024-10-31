@@ -101,13 +101,17 @@ export async function getBanner(id, graphql) {
     });
   }
 
+  const theme = JSON.parse(banner.theme);
+
   return {
     banner: {
       ...banner,
-      theme: JSON.parse(banner.theme),
+      theme,
       asyncUsageCount: discount.asyncUsageCount,
       discountStatus: discount.status,
-      themeDetails: bannerTheme,
+      themeDetails: banner.customThemeId
+        ? bannerTheme
+        : defaultColors[theme[0]],
     },
     discount,
   };
@@ -199,7 +203,7 @@ export async function getBanners(graphql) {
       (discount) => discount.id === banner.discountId,
     );
     banner.asyncUsageCount = discount.asyncUsageCount;
-    banner.theme = [banner.theme];
+    banner.theme = JSON.parse(banner.theme);
     banner.discountStatus = discount.status;
 
     if (banner.customThemeId) {
