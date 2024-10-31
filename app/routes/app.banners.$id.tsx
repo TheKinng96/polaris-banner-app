@@ -1,9 +1,12 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { authenticate } from "../shopify.server";
 
-import { getDiscounts, getBanner } from "../models/Discounts.server";
+import {
+  getAvailableDiscountList,
+  getBanner,
+} from "../models/Discounts.server";
 import type { Banner, CustomTheme } from "app/types/banners.types";
 import type { Discount } from "app/types/discounts.types";
 import { BannerFormProvider } from "app/contexts/BannerFormContext";
@@ -14,15 +17,15 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const { admin } = await authenticate.admin(request);
 
   if (params.id === "new") {
-    const discounts = await getDiscounts(admin.graphql);
+    const availableDiscountList = await getAvailableDiscountList(admin.graphql);
     const data = {
-      discounts,
+      availableDiscountList,
       banner: {
         id: 9999,
-        discountId: discounts.availableDiscounts[0].id,
+        discountId: availableDiscountList[0].id,
         title: "",
         source: "",
-        text: "",
+        text: availableDiscountList[0].summary,
         theme: ["info"],
         customThemeId: undefined,
         createdAt: new Date().toISOString(),
@@ -37,7 +40,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   }
 
   return json({
-    discounts: [],
+    availableDiscountList: [],
     banner: await getBanner(Number(params.id), admin.graphql),
   });
 }
@@ -82,21 +85,20 @@ export async function action({ request, params }: ActionFunctionArgs) {
     shop,
   };
 
-  return json(data);
+  return redirect("/app/banners");
 }
 
 export default function BannerFormView() {
-  const { banner, discounts } = useLoaderData<{
+  const { banner, availableDiscountList } = useLoaderData<{
     banner: Banner;
-    discounts: {
-      total: number;
-      data: Discount[];
-      availableDiscounts: Discount[];
-    };
+    availableDiscountList: Discount[];
   }>();
 
   return (
-    <BannerFormProvider initialBanner={banner} discounts={discounts}>
+    <BannerFormProvider
+      initialBanner={banner}
+      availableDiscountList={availableDiscountList}
+    >
       <BannerForm />
     </BannerFormProvider>
   );

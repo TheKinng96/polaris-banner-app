@@ -17,17 +17,11 @@ import type { Discount } from "app/types/discounts.types";
 import ColourPickerWithHex from "./BannerThemeColorPicker";
 
 interface BannerDetailsProps {
-  discounts: {
-    total: number;
-    data: Discount[];
-    availableDiscounts: Discount[];
-  };
   options: { label: string; value: string }[];
   selectedDiscount: Discount;
 }
 
 export function BannerDetails({
-  discounts,
   options,
   selectedDiscount,
 }: BannerDetailsProps) {
@@ -35,6 +29,7 @@ export function BannerDetails({
     state: { formState, customThemeFormState },
     updateFormState,
     updateCustomTheme,
+    availableDiscountList,
   } = useBannerFormContext();
 
   const maxWidth = "450px";
@@ -48,7 +43,7 @@ export function BannerDetails({
   };
 
   const handleSelectChange = (value: string) => {
-    const selectedDiscount = discounts.availableDiscounts.find(
+    const selectedDiscount = availableDiscountList.find(
       (discount) => discount.id === value,
     );
     updateFormState({

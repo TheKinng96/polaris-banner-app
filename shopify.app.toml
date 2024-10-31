@@ -3,7 +3,7 @@
 client_id = "b74b66d9bed456547af374c0563d5989"
 name = "discount-announcement"
 handle = "discount-announcement"
-application_url = "https://britain-government-shaped-column.trycloudflare.com"
+application_url = "https://optional-gray-v-mandate.trycloudflare.com"
 embedded = true
 
 [build]
@@ -13,7 +13,7 @@ include_config_on_deploy = true
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "read_discounts,write_products,write_script_tags,read_script_tags"
+scopes = "read_discounts,read_script_tags,write_products,write_script_tags"
 
 [auth]
 redirect_urls = [
@@ -50,7 +50,10 @@ redirect_urls = [
   "https://heating-generate-andrews-realize.trycloudflare.com/api/auth/callback",
   "https://britain-government-shaped-column.trycloudflare.com/auth/callback",
   "https://britain-government-shaped-column.trycloudflare.com/auth/shopify/callback",
-  "https://britain-government-shaped-column.trycloudflare.com/api/auth/callback"
+  "https://britain-government-shaped-column.trycloudflare.com/api/auth/callback",
+  "https://optional-gray-v-mandate.trycloudflare.com/auth/callback",
+  "https://optional-gray-v-mandate.trycloudflare.com/auth/shopify/callback",
+  "https://optional-gray-v-mandate.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

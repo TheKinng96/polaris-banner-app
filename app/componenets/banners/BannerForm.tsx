@@ -15,7 +15,7 @@ import { BannerPreview } from "app/componenets/banners/BannerPreview";
 
 export default function BannerForm() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const { state, isDirty, setCleanFormState, resetForm, discounts } =
+  const { state, isDirty, setCleanFormState, availableDiscountList } =
     useBannerFormContext();
   const { formState, customThemeFormState } = state;
 
@@ -28,10 +28,10 @@ export default function BannerForm() {
     navigate("/app/banners");
   };
 
-  const handleCancel = () => {
-    resetForm();
-    navigate("/app/banners");
-  };
+  // const handleCancel = () => {
+  //   resetForm();
+  //   navigate("/app/banners");
+  // };
 
   const handleDelete = () => {
     navigate("/app/banners");
@@ -46,17 +46,17 @@ export default function BannerForm() {
     submit(formData, { method: "post" });
   };
 
-  const options = discounts.availableDiscounts.map((discount) => ({
+  const options = availableDiscountList.map((discount) => ({
     label: discount.title,
     value: discount.id,
   }));
 
   const selectedDiscount = useMemo(
     () =>
-      discounts.availableDiscounts.find(
+      availableDiscountList.find(
         (discount) => discount.id === formState.discountId,
       ) as Discount,
-    [discounts.availableDiscounts, formState.discountId],
+    [availableDiscountList, formState.discountId],
   );
 
   return (
@@ -87,7 +87,6 @@ export default function BannerForm() {
 
         <Layout.Section>
           <BannerDetails
-            discounts={discounts}
             options={options}
             selectedDiscount={selectedDiscount}
           />

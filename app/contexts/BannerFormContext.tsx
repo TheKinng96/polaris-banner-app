@@ -14,21 +14,13 @@ interface BannerFormContextType {
   updateCustomTheme: (payload: Partial<CustomTheme>) => void;
   resetForm: () => void;
   setCleanFormState: () => void;
-  discounts: {
-    total: number;
-    data: Discount[];
-    availableDiscounts: Discount[];
-  };
+  availableDiscountList: Discount[];
 }
 
 interface BannerFormProviderProps {
   children: React.ReactNode;
   initialBanner?: Banner;
-  discounts: {
-    total: number;
-    data: Discount[];
-    availableDiscounts: Discount[];
-  };
+  availableDiscountList: Discount[];
 }
 
 const BannerFormContext = createContext<BannerFormContextType | undefined>(
@@ -38,12 +30,14 @@ const BannerFormContext = createContext<BannerFormContextType | undefined>(
 export const BannerFormProvider: React.FC<BannerFormProviderProps> = ({
   children,
   initialBanner,
-  discounts,
+  availableDiscountList,
 }) => {
   const bannerForm = useBannerForm(initialBanner);
 
   return (
-    <BannerFormContext.Provider value={{ ...bannerForm, discounts }}>
+    <BannerFormContext.Provider
+      value={{ ...bannerForm, availableDiscountList }}
+    >
       {children}
     </BannerFormContext.Provider>
   );

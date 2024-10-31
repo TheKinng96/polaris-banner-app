@@ -10,14 +10,12 @@ import { authenticate } from "../shopify.server";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData, useNavigate } from "@remix-run/react";
-import { getDiscounts } from "../models/Discounts.server.js";
-import type { Discount } from "app/types/discounts.types";
+import { getBanners } from "../models/Discounts.server.js";
+import type { Banner } from "app/types/banners.types";
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const { admin } = await authenticate.admin(request);
-
-  const data = await getDiscounts(admin.graphql);
-  return json(data);
+  await authenticate.admin(request);
+  return json(await getBanners());
 }
 
 const EmptyQRCodeState = ({ onAction }: { onAction: () => void }) => (
@@ -33,13 +31,13 @@ const EmptyQRCodeState = ({ onAction }: { onAction: () => void }) => (
   </EmptyState>
 );
 
-const DiscountTable = ({ discounts }: { discounts: Discount[] }) => (
+const BannerTable = ({ banners }: { banners: Banner[] }) => (
   <IndexTable
     resourceName={{
       singular: "Banner",
       plural: "Banners",
     }}
-    itemCount={discounts.length}
+    itemCount={banners.length}
     headings={[
       { title: "Title" },
       { title: "Status" },
@@ -48,34 +46,30 @@ const DiscountTable = ({ discounts }: { discounts: Discount[] }) => (
     ]}
     selectable={false}
   >
-    {discounts.map((discount, index) => (
-      <DiscountTableRow key={discount.id} index={index} discount={discount} />
+    {banners.map((banner, index) => (
+      <BannerTableRow key={banner.id} index={index} banner={banner} />
     ))}
   </IndexTable>
 );
 
-const DiscountTableRow = ({
-  discount,
+const BannerTableRow = ({
+  banner,
   index,
 }: {
-  discount: Discount;
+  banner: Banner;
   index: number;
 }) => (
-  <IndexTable.Row id={discount.id + ""} position={index}>
+  <IndexTable.Row id={banner.id + ""} position={index}>
     <IndexTable.Cell>
-      <Text as="p">{discount.title}</Text>
+      <Text as="p">{banner.title}</Text>
     </IndexTable.Cell>
-    <IndexTable.Cell>{discount.status}</IndexTable.Cell>
-    <IndexTable.Cell>{discount.asyncUsageCount}</IndexTable.Cell>
+    <IndexTable.Cell>{banner.status}</IndexTable.Cell>
+    <IndexTable.Cell>0</IndexTable.Cell>
   </IndexTable.Row>
 );
 
 export default function DiscountsList() {
-  const { total, data: discounts } = useLoaderData<{
-    total: number;
-    data: Discount[];
-    availableDiscounts: Discount[];
-  }>();
+  const banners = useLoaderData<Banner[]>();
   const navigate = useNavigate();
 
   return (
@@ -88,10 +82,10 @@ export default function DiscountsList() {
       <Layout>
         <Layout.Section>
           <Card padding="0">
-            {total === 0 ? (
-              <EmptyQRCodeState onAction={() => navigate("qrcodes/new")} />
+            {banners.length === 0 ? (
+              <EmptyQRCodeState onAction={() => navigate("/app/banners/new")} />
             ) : (
-              <DiscountTable discounts={discounts} />
+              <BannerTable banners={banners} />
             )}
           </Card>
         </Layout.Section>

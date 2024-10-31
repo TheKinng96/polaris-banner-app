@@ -2,10 +2,7 @@ import db from "../db.server";
 
 export async function getDiscounts(graphql) {
   const response = await graphql(`
-    query shopInfo {
-      discountNodesCount {
-        count
-      }
+    query getDiscounts {
       discountNodes(first: 10) {
         edges {
           node {
@@ -64,7 +61,7 @@ export async function getDiscounts(graphql) {
   `);
 
   const {
-    data: { discountNodes, discountNodesCount },
+    data: { discountNodes },
   } = await response.json();
 
   // Extract the discount information you need from `discountNodes`
@@ -76,16 +73,17 @@ export async function getDiscounts(graphql) {
     asyncUsageCount: edge.node.discount.asyncUsageCount,
   }));
 
+  return discounts;
+}
+
+export async function getAvailableDiscountList(graphql) {
   const banners = await db.banner.findMany();
   const bannersDiscountIds = banners.map((banner) => banner.discountId);
 
-  return {
-    total: discountNodesCount.count,
-    data: discounts,
-    availableDiscounts: discounts.filter(
-      (discount) => !bannersDiscountIds.includes(discount.id),
-    ),
-  };
+  const discounts = await getDiscounts(graphql);
+  return discounts.filter(
+    (discount) => !bannersDiscountIds.includes(discount.id),
+  );
 }
 
 export async function getBanner(id, graphql) {
@@ -166,4 +164,8 @@ async function getDiscount(id, graphql) {
   } = await response.json();
 
   return discountNode.discount;
+}
+
+export async function getBanners(graphql) {
+  return await db.banner.findMany();
 }
