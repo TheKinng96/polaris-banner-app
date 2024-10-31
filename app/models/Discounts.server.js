@@ -1,3 +1,4 @@
+import { defaultColors } from "../types/banners.types";
 import db from "../db.server";
 
 export async function getDiscounts(graphql) {
@@ -167,5 +168,26 @@ async function getDiscount(id, graphql) {
 }
 
 export async function getBanners(graphql) {
-  return await db.banner.findMany();
+  const discounts = await getDiscounts(graphql);
+  const banners = await db.banner.findMany();
+  const themes = await db.theme.findMany();
+
+  banners.forEach((banner) => {
+    const discount = discounts.find(
+      (discount) => discount.id === banner.discountId,
+    );
+    banner.asyncUsageCount = discount.asyncUsageCount;
+    banner.theme = [banner.theme];
+    banner.discountStatus = discount.status;
+
+    if (banner.customThemeId) {
+      banner.themeDetails = themes.find(
+        (theme) => theme.id === banner.customThemeId,
+      );
+    } else {
+      banner.themeDetails = defaultColors[banner.theme[0]];
+    }
+  });
+
+  return banners;
 }

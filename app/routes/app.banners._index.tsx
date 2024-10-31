@@ -1,7 +1,9 @@
 import {
+  Button,
   Card,
   EmptyState,
   IndexTable,
+  InlineStack,
   Layout,
   Page,
   Text,
@@ -11,66 +13,104 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData, useNavigate } from "@remix-run/react";
 import { getBanners } from "../models/Discounts.server.js";
-import type { Banner } from "app/types/banners.types";
+import { defaultColors, type Banner } from "app/types/banners.types";
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  await authenticate.admin(request);
-  return json(await getBanners());
+  const { admin } = await authenticate.admin(request);
+  const banners = await getBanners(admin.graphql);
+
+  return json(banners as unknown as Banner[]);
 }
-
-const EmptyQRCodeState = ({ onAction }: { onAction: () => void }) => (
-  <EmptyState
-    heading="Create unique QR codes for your product"
-    action={{
-      content: "Create QR code",
-      onAction,
-    }}
-    image="https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png"
-  >
-    <p>Allow customers to scan codes and buy products using their phones.</p>
-  </EmptyState>
-);
-
-const BannerTable = ({ banners }: { banners: Banner[] }) => (
-  <IndexTable
-    resourceName={{
-      singular: "Banner",
-      plural: "Banners",
-    }}
-    itemCount={banners.length}
-    headings={[
-      { title: "Title" },
-      { title: "Status" },
-      { title: "Usage" },
-      { title: "Preview" },
-    ]}
-    selectable={false}
-  >
-    {banners.map((banner, index) => (
-      <BannerTableRow key={banner.id} index={index} banner={banner} />
-    ))}
-  </IndexTable>
-);
-
-const BannerTableRow = ({
-  banner,
-  index,
-}: {
-  banner: Banner;
-  index: number;
-}) => (
-  <IndexTable.Row id={banner.id + ""} position={index}>
-    <IndexTable.Cell>
-      <Text as="p">{banner.title}</Text>
-    </IndexTable.Cell>
-    <IndexTable.Cell>{banner.status}</IndexTable.Cell>
-    <IndexTable.Cell>0</IndexTable.Cell>
-  </IndexTable.Row>
-);
 
 export default function DiscountsList() {
   const banners = useLoaderData<Banner[]>();
   const navigate = useNavigate();
+
+  const showPreview = (banner: Banner) => {
+    const existingBanner = document.getElementById("banner-preview-123");
+
+    if (existingBanner) {
+      // If banner exists, remove it
+      existingBanner.remove();
+    } else {
+      const previewBanner = createBanner(banner);
+      document.body.prepend(previewBanner);
+    }
+  };
+
+  const createBanner = (banner: Banner) => {
+    const previewBanner = document.createElement("div");
+    previewBanner.id = "banner-preview-123";
+    previewBanner.style.color =
+      banner.themeDetails?.text || defaultColors.info.text;
+    previewBanner.style.backgroundColor =
+      banner.themeDetails?.background || defaultColors.info.background;
+    previewBanner.style.width = "100%";
+    previewBanner.style.display = "flex";
+    previewBanner.style.justifyContent = "center";
+    previewBanner.style.padding = "1rem 0.5rem";
+    previewBanner.style.top = "0";
+    previewBanner.innerText = banner.text;
+    return previewBanner;
+  };
+
+  const EmptyQRCodeState = ({ onAction }: { onAction: () => void }) => (
+    <EmptyState
+      heading="Create unique QR codes for your product"
+      action={{
+        content: "Create QR code",
+        onAction,
+      }}
+      image="https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png"
+    >
+      <p>Allow customers to scan codes and buy products using their phones.</p>
+    </EmptyState>
+  );
+
+  const BannerTable = ({ banners }: { banners: Banner[] }) => (
+    <IndexTable
+      resourceName={{
+        singular: "Banner",
+        plural: "Banners",
+      }}
+      itemCount={banners.length}
+      headings={[
+        { title: "Title" },
+        { title: "Status" },
+        { title: "Usage" },
+        { title: "Actions" },
+      ]}
+      selectable={false}
+    >
+      {banners.map((banner, index) => (
+        <BannerTableRow key={banner.id} index={index} banner={banner} />
+      ))}
+    </IndexTable>
+  );
+
+  const BannerTableRow = ({
+    banner,
+    index,
+  }: {
+    banner: Banner;
+    index: number;
+  }) => (
+    <IndexTable.Row id={banner.id + ""} position={index}>
+      <IndexTable.Cell>
+        <Text as="p">{banner.title}</Text>
+      </IndexTable.Cell>
+      <IndexTable.Cell>{banner.status}</IndexTable.Cell>
+      <IndexTable.Cell>{banner.asyncUsageCount}</IndexTable.Cell>
+      <IndexTable.Cell>
+        <InlineStack gap="200">
+          <Button onClick={() => showPreview(banner)}>Preview</Button>
+          <Button onClick={() => navigate(`/app/banners/${banner.id}`)}>
+            Edit
+          </Button>
+        </InlineStack>
+      </IndexTable.Cell>
+    </IndexTable.Row>
+  );
 
   return (
     <Page>
