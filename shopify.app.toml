@@ -3,7 +3,7 @@
 client_id = "b74b66d9bed456547af374c0563d5989"
 name = "discount-announcement"
 handle = "discount-announcement"
-application_url = "https://optional-gray-v-mandate.trycloudflare.com"
+application_url = "https://investors-brake-virus-securities.trycloudflare.com"
 embedded = true
 
 [build]
@@ -13,7 +13,7 @@ include_config_on_deploy = true
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "read_discounts,read_script_tags,write_products,write_script_tags"
+scopes = "read_discounts,write_products"
 
 [auth]
 redirect_urls = [
@@ -53,7 +53,40 @@ redirect_urls = [
   "https://britain-government-shaped-column.trycloudflare.com/api/auth/callback",
   "https://optional-gray-v-mandate.trycloudflare.com/auth/callback",
   "https://optional-gray-v-mandate.trycloudflare.com/auth/shopify/callback",
-  "https://optional-gray-v-mandate.trycloudflare.com/api/auth/callback"
+  "https://optional-gray-v-mandate.trycloudflare.com/api/auth/callback",
+  "https://offering-entities-penn-epic.trycloudflare.com/auth/callback",
+  "https://offering-entities-penn-epic.trycloudflare.com/auth/shopify/callback",
+  "https://offering-entities-penn-epic.trycloudflare.com/api/auth/callback",
+  "https://essays-friend-zinc-boy.trycloudflare.com/auth/callback",
+  "https://essays-friend-zinc-boy.trycloudflare.com/auth/shopify/callback",
+  "https://essays-friend-zinc-boy.trycloudflare.com/api/auth/callback",
+  "https://manhattan-recipients-holding-deaf.trycloudflare.com/auth/callback",
+  "https://manhattan-recipients-holding-deaf.trycloudflare.com/auth/shopify/callback",
+  "https://manhattan-recipients-holding-deaf.trycloudflare.com/api/auth/callback",
+  "https://france-joint-choices-interference.trycloudflare.com/auth/callback",
+  "https://france-joint-choices-interference.trycloudflare.com/auth/shopify/callback",
+  "https://france-joint-choices-interference.trycloudflare.com/api/auth/callback",
+  "https://oct-reservations-gba-provincial.trycloudflare.com/auth/callback",
+  "https://oct-reservations-gba-provincial.trycloudflare.com/auth/shopify/callback",
+  "https://oct-reservations-gba-provincial.trycloudflare.com/api/auth/callback",
+  "https://omaha-designing-street-techrepublic.trycloudflare.com/auth/callback",
+  "https://omaha-designing-street-techrepublic.trycloudflare.com/auth/shopify/callback",
+  "https://omaha-designing-street-techrepublic.trycloudflare.com/api/auth/callback",
+  "https://said-inside-stories-driven.trycloudflare.com/auth/callback",
+  "https://said-inside-stories-driven.trycloudflare.com/auth/shopify/callback",
+  "https://said-inside-stories-driven.trycloudflare.com/api/auth/callback",
+  "https://expanding-furniture-warm-mysimon.trycloudflare.com/auth/callback",
+  "https://expanding-furniture-warm-mysimon.trycloudflare.com/auth/shopify/callback",
+  "https://expanding-furniture-warm-mysimon.trycloudflare.com/api/auth/callback",
+  "https://worm-qualify-fighting-boulevard.trycloudflare.com/auth/callback",
+  "https://worm-qualify-fighting-boulevard.trycloudflare.com/auth/shopify/callback",
+  "https://worm-qualify-fighting-boulevard.trycloudflare.com/api/auth/callback",
+  "https://examines-analyzed-husband-toxic.trycloudflare.com/auth/callback",
+  "https://examines-analyzed-husband-toxic.trycloudflare.com/auth/shopify/callback",
+  "https://examines-analyzed-husband-toxic.trycloudflare.com/api/auth/callback",
+  "https://investors-brake-virus-securities.trycloudflare.com/auth/callback",
+  "https://investors-brake-virus-securities.trycloudflare.com/auth/shopify/callback",
+  "https://investors-brake-virus-securities.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

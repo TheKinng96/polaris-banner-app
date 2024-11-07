@@ -1,0 +1,20 @@
+<div class="banner-container">
+  {{  block.settings.banner_text }}
+  {{ app.metafields.banner.text }}
+</div>
+
+{% schema %}
+{
+  "name": "Banner",
+  "target": "body",
+  "stylesheet": "banner.styles.css",
+  "settings": [
+    {
+      "type": "text",
+      "id": "banner_text",
+      "label": "Banner Text",
+      "default": "Click me 2"
+    }
+  ]
+}
+{% endschema %}
