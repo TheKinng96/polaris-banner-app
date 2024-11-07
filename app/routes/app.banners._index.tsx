@@ -19,12 +19,37 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const { admin } = await authenticate.admin(request);
   const banners = await getBanners(admin.graphql);
 
-  return json(banners as unknown as Banner[]);
+  const themesRes = await admin.rest.get({
+    path: "/admin/api/2024-10/themes.json",
+  });
+
+  const { themes } = await themesRes.json();
+  const activeTheme = themes.filter((theme: any) => theme.role === "main")[0];
+
+  const assetsRes = await admin.rest.get({
+    path: `/admin/api/2024-10/themes/${activeTheme.id}/assets.json`,
+    query: {
+      "asset[key]": "config/settings_data.json",
+    },
+  });
+
+  const { asset } = await assetsRes.json();
+  const blocks = JSON.parse(asset.value).current.blocks;
+
+  return json({
+    banners: banners as unknown as Banner[],
+    appInstalled: !!blocks["12845143347204555017"],
+  });
 }
 
 export default function DiscountsList() {
-  const banners = useLoaderData<Banner[]>();
+  const { banners, appInstalled } = useLoaderData<{
+    banners: Banner[];
+    appInstalled: boolean;
+  }>();
   const navigate = useNavigate();
+
+  console.log(appInstalled);
 
   const showPreview = (banner: Banner) => {
     const existingBanner = document.getElementById("banner-preview-123");

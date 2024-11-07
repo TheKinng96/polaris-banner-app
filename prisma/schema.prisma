@@ -43,13 +43,11 @@ model QRCode {
   createdAt        DateTime @default(now())
 }
 
-// 
 model Banner {
   id  Int @id @default(autoincrement())
   discountId String @unique
   title String
   status String
-  source String 
   text String
   theme String
   customThemeId Int?     @unique
@@ -63,4 +61,13 @@ model Theme {
   banner Banner?
   text String
   background String
+}
+
+// Collection of Banner data with corresponding metafield id
+// eg, text isnt real text but the text metafield id on shopify metafield storage
+model Metafield {
+  id Int @id @default(autoincrement())
+  text String
+  textColor String
+  backgroundColor String
 }

@@ -2,7 +2,6 @@ export interface Banner {
   id: number;
   discountId: string;
   title: string;
-  source: string;
   text: string;
   theme: ThemeColor[]; // Array to follow ChoiceList format but in reality only one theme can be selected
   customThemeId?: string;

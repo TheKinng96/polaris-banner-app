@@ -93,7 +93,6 @@ export async function action({ request, params }: ActionFunctionArgs) {
       data: {
         discountId: bannerData.discountId,
         title: bannerData.title,
-        source: bannerData.source,
         text: bannerData.text,
         theme: JSON.stringify(bannerData.theme),
         status: bannerData.status,
@@ -120,7 +119,6 @@ export async function action({ request, params }: ActionFunctionArgs) {
     data: {
       discountId: bannerData.discountId,
       title: bannerData.title,
-      source: bannerData.source,
       text: bannerData.text,
       theme: JSON.stringify(bannerData.theme),
       status: bannerData.status,
